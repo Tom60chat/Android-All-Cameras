@@ -1,6 +1,6 @@
 # Xamarin.Android All Cameras
 
-Access all the cameras on your phone (Front, Rear, Macro, Wide, etc ...)
+Access all the cameras on your phone (Front, Rear, Macro, Wide, etc...)
 
 | Rear | Rear wide |
 | --- | --- |
