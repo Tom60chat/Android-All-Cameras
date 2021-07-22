@@ -1,21 +1,10 @@
----
-name: Xamarin.Android - Camera2 Basic Sample
-description: "Demonstrates how to use the new Camera2 APIs to render a preview of a camera's viewport, capture an image and save it (Android Lollipop)"
-page_type: sample
-languages:
-- csharp
-products:
-- xamarin
-extensions:
-    tags:
-    - androidlollipop
-urlFragment: android50-camera2basic
----
-# Xamarin.Android Camera2 Basic Sample
+# Xamarin.Android All Cameras
 
-This sample demonstrates how to use the new Camera2 APIs to render a preview of a camera's viewport, capture an image and save it to the device's storage.
+Access all the cameras on your phone (Front, Rear, Macro, Wide, etc ...)
 
-![Camera2 Basic Sample application screenshot](Screenshots/Viewfinder.png "Camera2 Basic Sample application screenshot")
+| Rear | Rear wide |
+| --- | --- |
+| ![Camera2 Basic Sample application screenshot](Screenshots/Viewfinder.jpg "Primary camera screenshot") | ![Camera2 Basic Sample application screenshot](Screenshots/Viewfinder_wide.jpg "Wide camera screenshot") |
 
 ## Instructions
 
@@ -23,7 +12,17 @@ This sample demonstrates how to use the new Camera2 APIs to render a preview of 
 
 - Touch the info button to find out a little bit more about the app.
 
+- Touch the lens button to switch camera.
+
 - Requires a device with a rear facing camera
+
+## Compatibility
+
+| Compatible | Incompatible |
+| --- | --- |
+| - Xiaomi (Redmi Note 8T) |  |
+
+Do not hesitate to contribute by modifying the file or by opening an issue
 
 ## Build Requirements
 
@@ -32,3 +31,6 @@ Using this sample requires a device that is Android L or later and Xamarin.Andro
 ## License
 
 Original copyright (c) 2005-2008, The Android Open Source Project  
+
+## Source
+[Camera2Basic](https://github.com/xamarin/monodroid-samples/tree/master/android5.0/Camera2Basic)
