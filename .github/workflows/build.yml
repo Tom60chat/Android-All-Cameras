@@ -1,0 +1,59 @@
+name: Build Android App
+
+on:
+  push:
+    branches: [ master, dev ]
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v6.0.2
+    
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v2
+    
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v3.2.1
+    
+    - name: Install Android SDK Platform 27
+      run: sdkmanager "platforms;android-27"
+
+    - name: Setup NuGet
+      uses: nuget/setup-nuget@v2
+    
+    - name: Restore NuGet packages
+      run: nuget restore Camera2Basic.sln
+    
+    - name: Build and Sign APK (Debug)
+      run: msbuild Camera2Basic/Camera2Basic.csproj /verbosity:normal /t:Rebuild /t:PackageForAndroid /t:SignAndroidPackage /p:Configuration=Debug
+    
+    - name: Decode Keystore
+      if: github.event_name != 'pull_request'
+      run: |
+        $keystore_bytes = [System.Convert]::FromBase64String("${{ secrets.KEYSTORE_FILE }}")
+        [IO.File]::WriteAllBytes("${{ github.workspace }}/android-release-key.keystore", $keystore_bytes)
+    
+    - name: Build and Sign APK (Release)
+      if: github.event_name != 'pull_request'
+      run: |
+        msbuild Camera2Basic/Camera2Basic.csproj /verbosity:normal /t:Rebuild /t:PackageForAndroid /t:SignAndroidPackage /p:Configuration=Release /p:AndroidKeyStore=true /p:AndroidSigningKeyStore="${{ github.workspace }}/android-release-key.keystore" /p:AndroidSigningKeyAlias="${{ secrets.KEY_ALIAS }}" /p:AndroidSigningKeyPass="${{ secrets.KEY_PASSWORD }}" /p:AndroidSigningStorePass="${{ secrets.KEYSTORE_PASSWORD }}"
+    
+    - name: Upload Debug APK
+      uses: actions/upload-artifact@v4
+      with:
+        name: Camera2Basic-Debug
+        path: Camera2Basic/bin/Debug/*-Signed.apk
+        if-no-files-found: warn
+    
+    - name: Upload Release APK
+      uses: actions/upload-artifact@v4
+      with:
+        name: Camera2Basic-Release
+        path: Camera2Basic/bin/Release/*-Signed.apk
+        if-no-files-found: warn
