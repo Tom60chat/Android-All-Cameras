@@ -19,11 +19,11 @@ jobs:
       uses: microsoft/setup-msbuild@v2
     
     - name: Setup Android SDK
-      uses: android-actions/setup-android@v3
+      uses: android-actions/setup-android@v3.2.1
     
-    - name: Install Android SDK Platform 27
-      run: sdkmanager "platforms;android-27"
-    
+    - name: Install Android SDK Platform 24
+      run: sdkmanager "platforms;android-24"
+
     - name: Setup NuGet
       uses: nuget/setup-nuget@v2
     
