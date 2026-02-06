@@ -1,0 +1,51 @@
+name: Build Android App
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v6.0.2
+    
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v2
+    
+    - name: Setup Xamarin
+      uses: maxim-lobanov/setup-xamarin@v1.2.1
+      with:
+        mono-version: latest
+        xamarin-android-version: latest
+    
+    - name: Setup NuGet
+      uses: nuget/setup-nuget@v2
+    
+    - name: Restore NuGet packages
+      run: nuget restore Camera2Basic.sln
+    
+    - name: Build and Sign APK (Debug)
+      run: msbuild Camera2Basic/Camera2Basic.csproj /verbosity:normal /t:Rebuild /t:PackageForAndroid /t:SignAndroidPackage /p:Configuration=Debug
+    
+    - name: Build and Sign APK (Release)
+      run: msbuild Camera2Basic/Camera2Basic.csproj /verbosity:normal /t:Rebuild /t:PackageForAndroid /t:SignAndroidPackage /p:Configuration=Release
+    
+    - name: Upload Debug APK
+      uses: actions/upload-artifact@v4
+      with:
+        name: Camera2Basic-Debug
+        path: Camera2Basic/bin/Debug/*-Signed.apk
+        if-no-files-found: warn
+    
+    - name: Upload Release APK
+      uses: actions/upload-artifact@v4
+      with:
+        name: Camera2Basic-Release
+        path: Camera2Basic/bin/Release/*-Signed.apk
+        if-no-files-found: warn
